@@ -1,55 +1,271 @@
-# Next.js & NextUI Template
+# Expense Tracker
 
-This is a template for creating applications using Next.js 14 (app directory) and NextUI (v2).
+A comprehensive, modern expense tracking application built with Next.js 14, NextUI, and Firebase. Manage your complete financial picture with income and expense tracking, categorization, analytics, and more.
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-app-template)
+## ✨ Features
+
+### Core Financial Management
+
+- 💰 **Income & Expense Tracking** - Separate tracking for both income and expenses
+- 📊 **Real-time Dashboard** - Comprehensive financial overview with key metrics
+- 🏷️ **Smart Categorization** - Predefined categories for both income and expenses
+- 📈 **Financial Analytics** - Total income, expenses, and net income calculations
+- 📅 **Date Management** - Track transactions by date with full calendar support
+
+### User Experience
+
+- 🎨 **Modern UI/UX** - Beautiful, intuitive interface using NextUI components
+- 📱 **Fully Responsive** - Optimized for desktop, tablet, and mobile devices
+- 🌙 **Dark/Light Theme** - Toggle between themes for comfortable viewing
+- ♿ **Accessibility First** - Built with screen readers and keyboard navigation in mind
+- ⚡ **Fast Performance** - Built with Next.js 14 and optimized for speed
+
+### Advanced Features
+
+- 🔍 **Smart Filtering** - Filter transactions by type, category, date, or search terms
+- 📊 **Data Visualization** - Interactive pie charts showing expense and income distribution
+- ✏️ **Edit Transactions** - Modify existing transactions with full validation
+- 💾 **Data Management** - Export/import transactions in JSON or CSV formats
+- 🔄 **Real-time Sync** - Firebase integration with real-time updates across devices
+- 💿 **Offline Support** - Local storage backup for offline access
+
+### Data & Analytics
+
+- 📈 **Financial Summary** - Track total income, expenses, and net income
+- 🎯 **Category Insights** - Detailed breakdown of spending and income by category
+- 📊 **Visual Analytics** - Pie charts and progress bars for better understanding
+- 📋 **Transaction History** - Complete searchable history with advanced filters
 
 ## Technologies Used
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [NextUI v2](https://nextui.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+- [Next.js 14](https://nextjs.org/) - React framework with App Router
+- [NextUI v2](https://nextui.org/) - Modern React UI library
+- [Firebase](https://firebase.google.com/) - Backend-as-a-Service for data storage
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [TypeScript](https://www.typescriptlang.org/) - Type-safe JavaScript
+- [Framer Motion](https://www.framer.com/motion/) - Animation library
 
-## How to Use
+## Getting Started
 
-### Use the template with create-next-app
+### Prerequisites
 
-To create a new project based on this template using `create-next-app`, run the following command:
+- Node.js 18+ installed
+- Firebase project set up
+- Git installed
 
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/AbhiDevLab/expense-tracking-system.git
+   cd expense-tracking-system
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+
+   Create a `.env.local` file in the root directory:
+
+   ```env
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain_here
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id_here
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket_here
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id_here
+   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id_here
+   ```
+
+4. **Run the development server**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Open your browser**
+
+   Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
+
+## 🚀 Usage Guide
+
+### Dashboard Overview
+
+1. **Financial Summary**: View your total income, expenses, and net income at a glance
+2. **Visual Analytics**: See pie charts showing your expense distribution and income sources
+3. **Quick Insights**: Get category breakdowns with percentages and transaction counts
+
+### Adding Transactions
+
+1. **Navigate to "Add Transaction"** tab
+2. **Choose Transaction Type**: Select between Income (💰) or Expense (💸)
+3. **Fill in Details**:
+   - Description: What was this transaction for?
+   - Amount: How much money (in ₹)?
+   - Category: Select from predefined categories
+   - Date: When did this transaction occur?
+4. **Submit**: Click the add button to save your transaction
+
+### Managing Transactions
+
+1. **View All Transactions**: Go to the "Transactions" tab
+2. **Search & Filter**: Use the search bar and filters to find specific transactions
+3. **Edit Transactions**: Click the edit (✏️) button to modify any transaction
+4. **Delete Transactions**: Click the delete (🗑️) button to remove transactions
+5. **Filter Options**:
+   - By type (All, Income, Expenses)
+   - By category (dropdown with all your categories)
+   - By search term (description or category)
+
+### Data Management
+
+1. **Export Data**:
+   - Go to "Data" tab
+   - Choose "Export Data" → Select JSON or CSV format
+   - Download your complete transaction history
+2. **Import Data**:
+   - Click "Import Data"
+   - Select a previously exported JSON or CSV file
+   - Your transactions will be restored
+
+### Categories Available
+
+**Income Categories:**
+
+- Salary, Freelance, Business, Investment, Gift, Bonus, Other
+
+**Expense Categories:**
+
+- Food & Dining, Transportation, Entertainment, Shopping, Bills & Utilities, Healthcare, Education, Travel, Groceries, Other
+
+### Theme & Accessibility
+
+- **Theme Toggle**: Use the theme switcher in the navigation
+- **Responsive Design**: Works on all screen sizes
+- **Keyboard Navigation**: Fully accessible with keyboard
+- **Screen Reader Support**: Optimized for assistive technologies
+
+## 📁 Project Structure
+
+```
+expense-tracking-system/
+├── app/                           # Next.js 14 App Router
+│   ├── firebase.js               # Firebase configuration
+│   ├── layout.tsx                # Root layout component
+│   ├── page.tsx                  # Main expense tracker application
+│   └── providers.tsx             # Theme and UI providers
+├── components/                    # Reusable UI components
+│   ├── data-management.tsx       # Export/Import functionality
+│   ├── navbar.tsx               # Navigation component
+│   ├── pie-chart.tsx            # Data visualization component
+│   ├── theme-switch.tsx         # Theme toggle component
+│   ├── transaction-form.tsx     # Add/Edit transaction form
+│   ├── transaction-list.tsx     # Transaction history with filters
+│   └── transaction-summary.tsx  # Financial dashboard
+├── lib/                          # Utility functions
+│   └── utils.ts                 # Helper functions for calculations, storage, etc.
+├── types/                        # TypeScript type definitions
+│   └── index.ts                 # Transaction and component types
+├── config/                       # Configuration files
+│   └── site.ts                  # Site configuration
+└── styles/                       # Global styles
+    └── globals.css              # Tailwind CSS imports
 ```
 
-### Install dependencies
+## 🔧 Key Components
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+### Core Components
 
-```bash
-npm install
+- **TransactionForm**: Handles adding new income/expense transactions
+- **TransactionList**: Displays, filters, and manages existing transactions
+- **TransactionSummary**: Shows financial overview and analytics
+- **PieChart**: Visualizes category distribution for expenses and income
+- **DataManagement**: Handles export/import functionality
+
+### Utility Functions
+
+- **Local Storage**: Automatic backup of transactions for offline access
+- **Validation**: Input validation and error handling
+- **Calculations**: Financial summaries and category analysis
+- **Data Processing**: Export/import in JSON and CSV formats
+
+## 🔄 Migration & Compatibility
+
+This enhanced version is **fully backward compatible** with existing expense data. The application automatically:
+
+- **Migrates Legacy Data**: Existing expense records are converted to the new transaction format
+- **Preserves Data**: All your existing expenses remain intact and accessible
+- **Seamless Upgrade**: No data loss or manual migration required
+- **Firebase Integration**: Continues to use the same Firebase collections with enhanced schema
+
+### What's New in This Version
+
+✅ **Income Tracking** - Now track both income and expenses  
+✅ **Advanced Categories** - Predefined categories for better organization  
+✅ **Financial Dashboard** - Complete overview of your financial health  
+✅ **Data Visualization** - Interactive pie charts and analytics  
+✅ **Enhanced Filtering** - Search and filter by multiple criteria  
+✅ **Edit Transactions** - Modify existing records with validation  
+✅ **Export/Import** - Backup and restore your data in multiple formats  
+✅ **Local Storage Backup** - Offline access and data redundancy  
+✅ **Responsive Design** - Optimized for all devices  
+✅ **Improved UX** - Modern tabbed interface with better navigation
+
+## 🛠️ Technical Details
+
+### Database Schema
+
+The application supports both legacy and new data formats:
+
+**Legacy Format (Expenses Only):**
+
+```javascript
+{
+  name: "Coffee",
+  price: 150
+}
 ```
 
-### Run the development server
+**New Format (Income & Expenses):**
 
-```bash
-npm run dev
+```javascript
+{
+  type: "expense" | "income",
+  description: "Coffee at Starbucks",
+  amount: 150,
+  category: "Food & Dining",
+  date: "2024-01-15",
+  createdAt: Date
+}
 ```
 
-### Setup pnpm (optional)
+### Local Storage
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+Transactions are automatically backed up to browser local storage for:
 
-```bash
-public-hoist-pattern[]=*@nextui-org/*
-```
+- Offline access
+- Faster initial loading
+- Data redundancy
+- Better user experience
 
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
-"# Expense-tracker" 
-"# Expense-tracker" 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built with [NextUI](https://nextui.org/) for the beautiful UI components
+- Powered by [Firebase](https://firebase.google.com/) for real-time data storage
+- Inspired by modern expense tracking applications
