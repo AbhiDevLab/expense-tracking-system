@@ -227,7 +227,7 @@ export default function Home() {
       <Tabs
         selectedKey={activeTab}
         onSelectionChange={(key) => setActiveTab(key as string)}
-        className="w-full"
+        className="w-full justify-center"
         size="lg"
       >
         <Tab key="dashboard" title="📊 Dashboard">
