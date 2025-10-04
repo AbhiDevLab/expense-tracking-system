@@ -19,11 +19,13 @@ import {
 interface DataManagementProps {
   transactions: Transaction[];
   onImport: (transactions: Transaction[]) => Promise<void>;
+  userId?: string;
 }
 
 export const DataManagement: React.FC<DataManagementProps> = ({
   transactions,
   onImport,
+  userId
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -69,8 +71,17 @@ export const DataManagement: React.FC<DataManagementProps> = ({
 
       if (file.name.endsWith(".json")) {
         importedTransactions = JSON.parse(content);
+        
+        // Add userId to JSON imported transactions if missing
+        if (userId) {
+          importedTransactions = importedTransactions.map(transaction => ({
+            ...transaction,
+            userId: transaction.userId || userId
+          }));
+        }
       } else if (file.name.endsWith(".csv")) {
-        importedTransactions = parseCSVTransactions(content, user.uid);
+        // Use userId if provided, otherwise use empty string (function will handle it)
+        importedTransactions = parseCSVTransactions(content, userId || '');
       } else {
         alert("Please select a JSON or CSV file.");
         return;
@@ -102,7 +113,6 @@ export const DataManagement: React.FC<DataManagementProps> = ({
       </CardHeader>
       <CardBody>
         <div className="flex flex-col sm:flex-row gap-4">
-          {/* Export Dropdown */}
           <Dropdown>
             <DropdownTrigger>
               <Button
@@ -127,7 +137,6 @@ export const DataManagement: React.FC<DataManagementProps> = ({
             </DropdownMenu>
           </Dropdown>
 
-          {/* Import Button */}
           <Button
             variant="bordered"
             color="secondary"
@@ -137,7 +146,6 @@ export const DataManagement: React.FC<DataManagementProps> = ({
             📥 Import Data
           </Button>
 
-          {/* Hidden File Input */}
           <input
             ref={fileInputRef}
             type="file"
@@ -149,12 +157,10 @@ export const DataManagement: React.FC<DataManagementProps> = ({
 
         <div className="mt-4 text-sm text-default-500">
           <p className="mb-2">
-            <strong>Export:</strong> Download your transactions as JSON or CSV
-            files for backup or analysis.
+            <strong>Export:</strong> Download your transactions as JSON or CSV files.
           </p>
           <p>
-            <strong>Import:</strong> Upload previously exported JSON or CSV
-            files to restore your data.
+            <strong>Import:</strong> Upload previously exported JSON or CSV files.
           </p>
         </div>
       </CardBody>

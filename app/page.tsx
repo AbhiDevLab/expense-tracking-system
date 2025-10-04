@@ -281,6 +281,7 @@ function HomeContent() {
             <DataManagement
               transactions={transactions}
               onImport={importTransactions}
+              userId={user?.uid} 
             />
           </div>
         </Tab>
