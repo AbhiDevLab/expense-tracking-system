@@ -70,7 +70,7 @@ export const DataManagement: React.FC<DataManagementProps> = ({
       if (file.name.endsWith(".json")) {
         importedTransactions = JSON.parse(content);
       } else if (file.name.endsWith(".csv")) {
-        importedTransactions = parseCSVTransactions(content);
+        importedTransactions = parseCSVTransactions(content, user.uid);
       } else {
         alert("Please select a JSON or CSV file.");
         return;
