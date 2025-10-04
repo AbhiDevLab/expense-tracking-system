@@ -1,3 +1,422 @@
+/* globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+   
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+   
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+   
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+   
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+   
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+   
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+   
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+   
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+   
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+   
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+   
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+   
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+   
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+   
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+   
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Existing blink animation */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 0.75s step-end infinite;
+}
+
+/* Emoji pulse animation */
+@keyframes pulse-emoji {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-pulse-emoji {
+  animation: pulse-emoji 2s infinite ease-in-out;
+}
+
+/* Starfield background animations */
+@keyframes animateStars1 {
+  from {
+    transform: translateZ(-500px);
+  }
+  to {
+    transform: translateZ(500px);
+  }
+}
+
+@keyframes animateStars2 {
+  from {
+    transform: translateZ(-1000px);
+  }
+  to {
+    transform: translateZ(1000px);
+  }
+}
+
+@keyframes animateStars3 {
+  from {
+    transform: translateZ(-1500px);
+  }
+  to {
+    transform: translateZ(1500px);
+  }
+}
+
+@keyframes animateStars4 {
+  from {
+    transform: translateZ(-2000px);
+  }
+  to {
+    transform: translateZ(2000px);
+  }
+}
+
+.starfield-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  transform-style: preserve-3d;
+  pointer-events: none;
+  perspective: 500px;
+}
+
+/* Dark theme stars - DENSER PATTERNS */
+.dark .star-1 {
+  background-image: 
+    radial-gradient(2px 2px at 10px 15px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 20px 35px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 30px 5px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 45px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 50px 25px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 60px 55px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 70px 15px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 80px 65px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 90px 35px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 100px 75px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 110px 5px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 120px 45px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 130px 25px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 140px 65px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 150px 15px, #ddd, rgba(0,0,0,0));
+  background-size: 80px 80px;
+  animation: animateStars1 80s linear infinite;
+}
+
+.dark .star-2 {
+  background-image: 
+    radial-gradient(1.5px 1.5px at 5px 25px, #ccc, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 15px 10px, #eee, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 25px 40px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 35px 20px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 45px 60px, #ccc, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 55px 30px, #eee, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 65px 50px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 75px 10px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 85px 70px, #ccc, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 95px 40px, #eee, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 105px 20px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 115px 80px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 125px 30px, #ccc, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 135px 60px, #eee, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 145px 15px, #fff, rgba(0,0,0,0));
+  background-size: 100px 100px;
+  animation: animateStars2 100s linear infinite;
+}
+
+.dark .star-3 {
+  background-image: 
+    radial-gradient(1px 1px at 8px 5px, #bbb, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 16px 30px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 24px 55px, #eee, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 32px 10px, #ccc, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 40px 75px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 48px 25px, #bbb, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 56px 60px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 64px 15px, #eee, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 72px 80px, #ccc, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 80px 35px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 88px 65px, #bbb, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 96px 20px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 104px 85px, #eee, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 112px 45px, #ccc, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 120px 5px, #fff, rgba(0,0,0,0));
+  background-size: 130px 130px;
+  animation: animateStars3 120s linear infinite;
+}
+
+/* NEW: Fourth star layer for even more density */
+.dark .star-4 {
+  background-image: 
+    radial-gradient(0.8px 0.8px at 3px 8px, #aaa, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 7px 22px, #ccc, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 11px 38px, #eee, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 15px 12px, #999, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 19px 47px, #bbb, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 23px 18px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 27px 53px, #fff, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 31px 28px, #aaa, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 35px 63px, #ccc, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 39px 8px, #eee, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 43px 42px, #999, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 47px 17px, #bbb, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 51px 58px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 55px 33px, #fff, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 59px 68px, #aaa, rgba(0,0,0,0));
+  background-size: 70px 70px;
+  animation: animateStars4 140s linear infinite;
+}
+
+/* Light theme stars - DENSER PATTERNS */
+:root .star-1,
+.light .star-1 {
+  background-image: 
+    radial-gradient(1.5px 1.5px at 10px 15px, #4a5568, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 20px 35px, #718096, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 30px 5px, #4a5568, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 40px 45px, #718096, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 50px 25px, #4a5568, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 60px 55px, #718096, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 70px 15px, #4a5568, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 80px 65px, #718096, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 90px 35px, #4a5568, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 100px 75px, #718096, rgba(0,0,0,0));
+  background-size: 80px 80px;
+  animation: animateStars1 100s linear infinite;
+  opacity: 0.5;
+}
+
+:root .star-2,
+.light .star-2 {
+  background-image: 
+    radial-gradient(1px 1px at 5px 25px, #718096, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 15px 10px, #4a5568, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 25px 40px, #718096, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 35px 20px, #4a5568, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 45px 60px, #718096, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 55px 30px, #4a5568, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 65px 50px, #718096, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 75px 10px, #4a5568, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 85px 70px, #718096, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 95px 40px, #4a5568, rgba(0,0,0,0));
+  background-size: 100px 100px;
+  animation: animateStars2 120s linear infinite;
+  opacity: 0.4;
+}
+
+:root .star-3,
+.light .star-3 {
+  background-image: 
+    radial-gradient(0.8px 0.8px at 8px 5px, #a0aec0, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 16px 30px, #718096, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 24px 55px, #a0aec0, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 32px 10px, #718096, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 40px 75px, #a0aec0, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 48px 25px, #718096, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 56px 60px, #a0aec0, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 64px 15px, #718096, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 72px 80px, #a0aec0, rgba(0,0,0,0)),
+    radial-gradient(0.8px 0.8px at 80px 35px, #718096, rgba(0,0,0,0));
+  background-size: 120px 120px;
+  animation: animateStars3 140s linear infinite;
+  opacity: 0.3;
+}
+
+/* NEW: Fourth star layer for light theme */
+:root .star-4,
+.light .star-4 {
+  background-image: 
+    radial-gradient(0.6px 0.6px at 3px 8px, #cbd5e0, rgba(0,0,0,0)),
+    radial-gradient(0.6px 0.6px at 7px 22px, #a0aec0, rgba(0,0,0,0)),
+    radial-gradient(0.6px 0.6px at 11px 38px, #cbd5e0, rgba(0,0,0,0)),
+    radial-gradient(0.6px 0.6px at 15px 12px, #a0aec0, rgba(0,0,0,0)),
+    radial-gradient(0.6px 0.6px at 19px 47px, #cbd5e0, rgba(0,0,0,0)),
+    radial-gradient(0.6px 0.6px at 23px 18px, #a0aec0, rgba(0,0,0,0)),
+    radial-gradient(0.6px 0.6px at 27px 53px, #cbd5e0, rgba(0,0,0,0)),
+    radial-gradient(0.6px 0.6px at 31px 28px, #a0aec0, rgba(0,0,0,0)),
+    radial-gradient(0.6px 0.6px at 35px 63px, #cbd5e0, rgba(0,0,0,0)),
+    radial-gradient(0.6px 0.6px at 39px 8px, #a0aec0, rgba(0,0,0,0));
+  background-size: 70px 70px;
+  animation: animateStars4 160s linear infinite;
+  opacity: 0.2;
+}
+
+/* Red shadow glow effects for light theme */
+.light-glow-container {
+  transition: all 0.3s ease-in-out;
+}
+
+:root .light-glow-container,
+.light .light-glow-container {
+  box-shadow: 
+    0 0 30px rgba(239, 68, 68, 0.2),
+    0 0 60px rgba(239, 68, 68, 0.15),
+    0 0 90px rgba(239, 68, 68, 0.1),
+    0 8px 40px rgba(239, 68, 68, 0.25) !important;
+  animation: redPulseIntense 3s ease-in-out infinite;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+:root .light-theme-button,
+.light .light-theme-button {
+  box-shadow: 
+    0 0 25px rgba(239, 68, 68, 0.4),
+    0 10px 30px rgba(239, 68, 68, 0.3),
+    0 5px 20px rgba(239, 68, 68, 0.25) !important;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+}
+
+:root .light-theme-button::before,
+.light .light-theme-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(239, 68, 68, 0.3),
+    transparent
+  );
+  transition: left 0.7s ease-in-out;
+}
+
+:root .light-theme-button:hover::before,
+.light .light-theme-button:hover::before {
+  left: 100%;
+}
+
+/* Intense red pulse animation */
+@keyframes redPulseIntense {
+  0%, 100% {
+    box-shadow: 
+      0 0 30px rgba(239, 68, 68, 0.2),
+      0 0 60px rgba(239, 68, 68, 0.15),
+      0 0 90px rgba(239, 68, 68, 0.1),
+      0 8px 40px rgba(239, 68, 68, 0.25);
+  }
+  50% {
+    box-shadow: 
+      0 0 40px rgba(239, 68, 68, 0.3),
+      0 0 80px rgba(239, 68, 68, 0.2),
+      0 0 120px rgba(239, 68, 68, 0.15),
+      0 8px 50px rgba(239, 68, 68, 0.35);
+  }
+}
+
+/* Enhanced button hover effects */
+:root .light-theme-button:hover,
+.light .light-theme-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 0 35px rgba(239, 68, 68, 0.5),
+    0 15px 40px rgba(239, 68, 68, 0.35),
+    0 8px 25px rgba(239, 68, 68, 0.3) !important;
+}
+
+/* Dark theme overrides */
+.dark .light-glow-container {
+  box-shadow: none;
+  animation: none;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .light-theme-button {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.dark .light-theme-button::before {
+  display: none;
+}
+
+/* Ensure dark theme doesn't have the red glow */
+.dark .light-glow-container {
+  box-shadow: none;
+  animation: none;
+}
+
+.dark .light-theme-button {
+  box-shadow: none !important;
+}
+
+.dark .light-theme-button::before {
+  display: none;
+}

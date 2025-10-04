@@ -8,6 +8,7 @@ import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 
 import { Providers } from "./providers";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: {
@@ -40,28 +41,43 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
+          "min-h-screen flex flex-col bg-background font-sans antialiased",
+          fontSans.variable
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
-            </main>
-            <footer className="w-full flex items-center justify-center py-3">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
-                title="nextui.org homepage"
-              >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">NextUI</p>
-              </Link>
-            </footer>
-          </div>
+          <AuthProvider>
+            {/* Full-screen starfield background */}
+            <div className="fixed inset-0 z-0 bg-gradient-to-br from-background via-background to-blue-100 dark:from-gray-900 dark:via-black dark:to-gray-800">
+              <div className="starfield-layer star-1"></div>
+              <div className="starfield-layer star-2"></div>
+              <div className="starfield-layer star-3"></div>
+              <div className="starfield-layer star-4"></div>
+            </div>
+            
+            {/* Content wrapper with higher z-index */}
+            <div className="relative z-10 flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-grow flex flex-col">
+                <div className="container mx-auto max-w-7xl pt-16 px-6 flex-grow flex flex-col">
+                  {children}
+                </div>
+              </main>
+              
+              {/* Footer with minimal height */}
+              <footer className="w-full flex items-center justify-center min-h-[32px] bg-background/80 backdrop-blur-sm border-t border-border">
+                <Link
+                  isExternal
+                  className="flex items-center gap-1 text-current text-sm py-1"
+                  href="https://github.com/AbhiDevLab"
+                  title="AbhiDevLab"
+                >
+                  <span className="text-foreground/60">Powered by</span>
+                  <p className="text-primary">AbhiDevLab</p>
+                </Link>
+              </footer>
+            </div>
+          </AuthProvider>
         </Providers>
       </body>
     </html>

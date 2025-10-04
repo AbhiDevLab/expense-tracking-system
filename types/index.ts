@@ -13,6 +13,7 @@ export interface Transaction {
   category: string;
   date: string;
   createdAt?: Date;
+  userId: string; // ADD THIS LINE
 }
 
 export interface TransactionFormData {

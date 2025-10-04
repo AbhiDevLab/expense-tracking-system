@@ -27,6 +27,5 @@ export const siteConfig = {
     github: "https://github.com/AbhiDevLab",
     twitter: "https://twitter.com/x",
     discord: "https://discord.gg/873902320507834368",
-    sponsor: "https://github.com/sponsors/AbhiDevLab",
   },
 };

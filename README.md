@@ -243,15 +243,6 @@ The application supports both legacy and new data formats:
 }
 ```
 
-### Local Storage
-
-Transactions are automatically backed up to browser local storage for:
-
-- Offline access
-- Faster initial loading
-- Data redundancy
-- Better user experience
-
 ## Contributing
 
 1. Fork the repository

@@ -9,14 +9,13 @@ import {
   QuerySnapshot,
   deleteDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
-import { Tabs, Tab } from "@nextui-org/tabs";
+import { Tabs, Tab, Button } from "@nextui-org/react";
 
 import { db } from "./firebase";
 import { Transaction, TransactionFormData } from "@/types";
 import {
-  saveTransactionsToLocalStorage,
-  loadTransactionsFromLocalStorage,
   getCurrentDate,
 } from "@/lib/utils";
 import { TransactionForm } from "@/components/transaction-form";
@@ -25,7 +24,8 @@ import { TransactionSummaryComponent } from "@/components/transaction-summary";
 import { DataManagement } from "@/components/data-management";
 import { PieChart } from "@/components/pie-chart";
 import { getCategoryData } from "@/lib/utils";
-
+import { useAuth } from "@/contexts/AuthContext";
+import { Login } from "@/app/auth/login";
 // Legacy interface for backward compatibility
 interface ExpenseItem {
   id: string;
@@ -33,14 +33,20 @@ interface ExpenseItem {
   price: number;
 }
 
-export default function Home() {
+function HomeContent() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string>("dashboard");
+  const { user, logout } = useAuth();
 
-  // Add transaction to database and local storage
+  // Add transaction to database - UPDATED WITH USER ID
   const addTransaction = async (formData: TransactionFormData) => {
+    if (!user) {
+      setError("You must be logged in to add transactions");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -52,43 +58,42 @@ export default function Home() {
         category: formData.category,
         date: formData.date,
         createdAt: new Date(),
+        userId: user.uid, // Add user ID to transaction
       };
 
       // Add to Firebase
       const docRef = await addDoc(collection(db, "transactions"), transaction);
-
-      // The transaction will be automatically added to state via the onSnapshot listener
       console.log("Transaction added with ID:", docRef.id);
     } catch (err) {
       if (process.env.NODE_ENV === "development") {
         console.error("Error adding transaction:", err);
       }
       setError("Failed to add transaction. Please try again.");
-      throw err; // Re-throw to handle in form component
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  // Load transactions from Firebase and local storage
+  // Load transactions from Firebase - UPDATED WITH USER FILTER
   useEffect(() => {
-    console.log("Initializing transaction data...");
-
-    // Load from local storage first for immediate display
-    const localTransactions = loadTransactionsFromLocalStorage();
-    if (localTransactions.length > 0) {
-      setTransactions(localTransactions);
+    if (!user) {
+      setTransactions([]);
+      return;
     }
 
-    // Set up Firebase listener for real-time updates
-    const q = query(collection(db, "transactions"));
+    console.log("Loading transactions for user:", user.uid);
+
+    // Set up Firebase listener for real-time updates - ONLY USER'S TRANSACTIONS
+    const q = query(
+      collection(db, "transactions"),
+      where("userId", "==", user.uid)
+    );
+    
     const unsubscribe = onSnapshot(
       q,
       (querySnapshot: QuerySnapshot) => {
-        console.log(
-          "Firebase connection successful! Documents:",
-          querySnapshot.size
-        );
+        console.log("Firebase connection successful! Documents:", querySnapshot.size);
         const transactionsArr: Transaction[] = [];
 
         querySnapshot.forEach((doc) => {
@@ -101,13 +106,11 @@ export default function Home() {
               id: doc.id,
               type: data.type,
               description: data.description,
-              amount:
-                typeof data.amount === "string"
-                  ? parseFloat(data.amount)
-                  : data.amount || 0,
+              amount: typeof data.amount === "string" ? parseFloat(data.amount) : data.amount || 0,
               category: data.category || "Other",
               date: data.date || getCurrentDate(),
               createdAt: data.createdAt?.toDate() || new Date(),
+              userId: data.userId || user.uid,
             });
           } else if (data.name && data.price) {
             // Legacy expense format - convert to new format
@@ -115,34 +118,28 @@ export default function Home() {
               id: doc.id,
               type: "expense",
               description: data.name,
-              amount:
-                typeof data.price === "string"
-                  ? parseFloat(data.price)
-                  : data.price || 0,
+              amount: typeof data.price === "string" ? parseFloat(data.price) : data.price || 0,
               category: "Other",
               date: getCurrentDate(),
               createdAt: new Date(),
+              userId: user.uid,
             });
           }
         });
 
         setTransactions(transactionsArr);
-
-        // Save to local storage for offline access
-        saveTransactionsToLocalStorage(transactionsArr);
-
-        setError(""); // Clear any previous errors on successful load
+        setError("");
       },
       (err) => {
         if (process.env.NODE_ENV === "development") {
           console.error("Error fetching transactions:", err);
         }
-        setError("Failed to load transactions. Using local data if available.");
+        setError("Failed to load transactions.");
       }
     );
 
     return () => unsubscribe();
-  }, []);
+  }, [user]); // Re-run when user changes
 
   // Delete transaction from database
   const deleteTransaction = async (id: string) => {
@@ -180,7 +177,10 @@ export default function Home() {
       // Add each transaction to Firebase
       for (const transaction of importedTransactions) {
         const { id, ...transactionData } = transaction; // Remove id to let Firebase generate new ones
-        await addDoc(collection(db, "transactions"), transactionData);
+        await addDoc(collection(db, "transactions"), {
+          ...transactionData,
+          userId: user?.uid // Add current user ID to imported transactions
+        });
       }
     } catch (err) {
       if (process.env.NODE_ENV === "development") {
@@ -199,22 +199,28 @@ export default function Home() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-2">💰 Expense Tracker</h1>
-        <p className="text-default-500">
-          Manage your finances with ease - track income, expenses, and see your
-          financial health at a glance
-        </p>
+      {/* Header with Logout */}
+      <div className="flex justify-between items-center">
+        <div className="text-center flex-1">
+          <h1 className="text-4xl font-bold mb-2">💰 Expense Tracker</h1>
+          <p className="text-default-500">
+            Welcome, {user?.displayName || user?.email}! Manage your finances with ease
+          </p>
+        </div>
+        <Button
+          color="danger"
+          variant="flat"
+          onClick={logout}
+          className="ml-4"
+        >
+          Logout
+        </Button>
       </div>
 
       {error && (
-        <div
-          className="bg-danger-50 border border-danger-200 text-danger-700 px-4 py-3 rounded-lg mb-4"
-          role="alert"
-        >
+        <div className="bg-danger-50 border border-danger-200 text-danger-700 px-4 py-3 rounded-lg mb-4">
           <span className="block sm:inline">{error}</span>
           <button
-            aria-label="Close error message"
             className="float-right font-bold text-danger-700 hover:text-danger-900"
             onClick={() => setError("")}
           >
@@ -281,4 +287,22 @@ export default function Home() {
       </Tabs>
     </div>
   );
+}
+
+export default function Home() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login />;
+  }
+
+  return <HomeContent />;
 }

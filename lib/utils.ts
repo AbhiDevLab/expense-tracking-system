@@ -1,26 +1,5 @@
 import { Transaction, TransactionSummary, CategoryData } from '@/types';
 
-// Local Storage utilities
-export const LOCAL_STORAGE_KEY = 'expense-tracker-transactions';
-
-export const saveTransactionsToLocalStorage = (transactions: Transaction[]): void => {
-    try {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(transactions));
-    } catch (error) {
-        console.error('Failed to save transactions to localStorage:', error);
-    }
-};
-
-export const loadTransactionsFromLocalStorage = (): Transaction[] => {
-    try {
-        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
-    } catch (error) {
-        console.error('Failed to load transactions from localStorage:', error);
-        return [];
-    }
-};
-
 // Transaction calculation utilities
 export const calculateTransactionSummary = (transactions: Transaction[]): TransactionSummary => {
     const totalIncome = transactions
@@ -118,8 +97,8 @@ export const exportTransactionsToCSV = (transactions: Transaction[]): string => 
         ...transactions.map(t => [
             t.date,
             t.type,
-            `"${t.description}"`,
-            `"${t.category}"`,
+            `"${t.description.replace(/"/g, '""')}"`, // Escape quotes in CSV
+            `"${t.category.replace(/"/g, '""')}"`,    // Escape quotes in CSV
             t.amount.toString()
         ].join(','))
     ].join('\n');
@@ -127,30 +106,85 @@ export const exportTransactionsToCSV = (transactions: Transaction[]): string => 
     return csvContent;
 };
 
-export const parseCSVTransactions = (csvContent: string): Transaction[] => {
-    const lines = csvContent.split('\n');
+export const parseCSVTransactions = (csvContent: string, userId: string): Transaction[] => {
+    const lines = csvContent.split('\n').filter(line => line.trim()); // Remove empty lines
     const transactions: Transaction[] = [];
 
-    // Skip header row
-    for (let i = 1; i < lines.length; i++) {
+    // Skip header row if it exists
+    const startIndex = lines[0].toLowerCase().includes('date') ? 1 : 0;
+
+    for (let i = startIndex; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
 
-        const [date, type, description, category, amount] = line.split(',');
+        try {
+            // Improved CSV parsing that handles quotes and commas within fields
+            const parsedLine = parseCSVLine(line);
+            const [date, type, description, category, amount] = parsedLine;
 
-        if (date && type && description && category && amount) {
-            transactions.push({
-                id: `imported-${Date.now()}-${i}`,
-                date: date.trim(),
-                type: type.trim() as 'income' | 'expense',
-                description: description.replace(/"/g, '').trim(),
-                category: category.replace(/"/g, '').trim(),
-                amount: parseFloat(amount.trim())
-            });
+            if (date && type && description && category && amount) {
+                const cleanType = type.trim().toLowerCase() as 'income' | 'expense';
+                if (cleanType !== 'income' && cleanType !== 'expense') {
+                    console.warn(`Invalid transaction type at line ${i + 1}: ${type}`);
+                    continue;
+                }
+
+                const transactionAmount = parseFloat(amount.trim());
+                if (isNaN(transactionAmount) || transactionAmount <= 0) {
+                    console.warn(`Invalid amount at line ${i + 1}: ${amount}`);
+                    continue;
+                }
+
+                transactions.push({
+                    id: `imported-${Date.now()}-${i}`,
+                    date: date.trim(),
+                    type: cleanType,
+                    description: description.replace(/[&]/g, '').trim(),
+                    category: category.replace(/[&]/g, '').trim(),
+                    amount: transactionAmount,
+                    userId: userId
+                });
+            }
+        } catch (error) {
+            console.warn(`Failed to parse line ${i + 1}: ${line}`, error);
+            continue;
         }
     }
 
     return transactions;
+};
+
+// Helper function to parse CSV lines with quotes
+const parseCSVLine = (line: string): string[] => {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const nextChar = line[i + 1];
+        
+        if (char === '"') {
+            if (inQuotes && nextChar === '"') {
+                // Escaped quote
+                current += '"';
+                i++; // Skip next quote
+            } else {
+                // Toggle quote state
+                inQuotes = !inQuotes;
+            }
+        } else if (char === ',' && !inQuotes) {
+            // End of field
+            result.push(current);
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    
+    // Add the last field
+    result.push(current);
+    return result;
 };
 
 // Filter utilities
@@ -168,4 +202,56 @@ export const filterTransactionsByDateRange = (
     endDate: string
 ): Transaction[] => {
     return transactions.filter(t => t.date >= startDate && t.date <= endDate);
+};
+
+// Search utilities
+export const searchTransactions = (transactions: Transaction[], query: string): Transaction[] => {
+    if (!query.trim()) return transactions;
+    
+    const lowerQuery = query.toLowerCase();
+    return transactions.filter(t => 
+        t.description.toLowerCase().includes(lowerQuery) ||
+        t.category.toLowerCase().includes(lowerQuery) ||
+        t.amount.toString().includes(lowerQuery)
+    );
+};
+
+// Sort utilities
+// Sort utilities with complete type safety
+export const sortTransactions = (transactions: Transaction[], sortBy: keyof Transaction, sortOrder: 'asc' | 'desc'): Transaction[] => {
+    return [...transactions].sort((a, b) => {
+        const aValue = a[sortBy];
+        const bValue = b[sortBy];
+        
+        // Both values are undefined/null
+        if (!aValue && !bValue) return 0;
+        // Only aValue is undefined/null
+        if (!aValue) return sortOrder === 'asc' ? -1 : 1;
+        // Only bValue is undefined/null
+        if (!bValue) return sortOrder === 'asc' ? 1 : -1;
+        
+        // Safe comparison with proper typing
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+            return sortOrder === 'asc' 
+                ? aValue.localeCompare(bValue)
+                : bValue.localeCompare(aValue);
+        }
+        
+        // For numbers
+        if (typeof aValue === 'number' && typeof bValue === 'number') {
+            return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+        }
+        
+        // Fallback for other types
+        const aString = String(aValue);
+        const bString = String(bValue);
+        return sortOrder === 'asc' 
+            ? aString.localeCompare(bString)
+            : bString.localeCompare(aString);
+    });
+};
+
+// Generate unique ID
+export const generateId = (): string => {
+    return `txn-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 };
