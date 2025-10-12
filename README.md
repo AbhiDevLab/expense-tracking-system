@@ -90,6 +90,7 @@ A comprehensive, modern expense tracking application built with Next.js 14, Next
 5. **Open your browser**
 
    Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
+   
    Homepage:
    <img width="1140" height="677" alt="image" src="https://github.com/user-attachments/assets/cff9e57b-3faa-40ae-9389-b5fa29417cbc" />
 
