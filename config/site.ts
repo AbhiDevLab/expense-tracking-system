@@ -25,7 +25,7 @@ export const siteConfig = {
   ],
   links: {
     github: "https://github.com/AbhiDevLab",
-    twitter: "https://twitter.com/x",
-    discord: "https://discord.gg/873902320507834368",
+    twitter: "https://twitter.com/axhi_01",
+    discord: "https://discord.com/users/873902320507834368",
   },
 };
